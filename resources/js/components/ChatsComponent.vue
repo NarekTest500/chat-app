@@ -6,7 +6,6 @@
                 <div class="card-body p-0">
                     <ul class="list-unstyled" v-chat-scroll style="height: 300px; overflow-y:scroll">
                         <li class="p-2" v-for="(message, index) in messages" :key="index">
-                            <!-- <strong>{{messages.user_id}}</strong> -->
                             <strong>{{messages[index].user.name}}</strong>
                             {{message.message}}
                         </li>
@@ -63,25 +62,18 @@
 
             Echo.join('chat')
                 .here(user => {
-                    // console.log('Here - ');
-                    // console.log(user);
                     this.users = user;
                 })
                 .joining(user => {
-                    // console.log('Joining - ');
-                    // console.log(user);
                     this.users.push(user);
                 })
                 .leaving(user => {
-                    // console.log('Leaving - ');
-                    // console.log(user);
                     this.users = this.users.filter(u => u.id != user.id);
                 })
                 .listen('MessageSent', (event) => {
                     this.messages.push(event.message);
                 })
                 .listenForWhisper('typing', user => {
-                    // console.log(user);
                     this.activeUser = user;
 
                     if (this.typingTimer) {
