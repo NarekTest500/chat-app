@@ -11,6 +11,11 @@ window.Vue = require('vue');
 import VueChatScroll from 'vue-chat-scroll'
 Vue.use(VueChatScroll)
 
+import Toaster from 'v-toaster'
+import 'v-toaster/dist/v-toaster.css'
+Vue.use(Toaster, {timeout: 5000})
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

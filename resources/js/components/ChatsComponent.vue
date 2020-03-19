@@ -69,10 +69,12 @@
                 .joining(user => {
                     this.numberOfUsers++;
                     this.users.push(user);
+                    this.$toaster.success(user.name + ' is joined the chat room');
                 })
                 .leaving(user => {
                     this.numberOfUsers--;
                     this.users = this.users.filter(u => u.id != user.id);
+                    this.$toaster.warning(user.name + ' is leaved the chat room');
                 })
                 .listen('MessageSent', (event) => {
                     this.messages.push(event.message);
