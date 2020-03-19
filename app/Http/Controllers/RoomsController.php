@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Auth;
 class RoomsController extends Controller
 {
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function create ()
     {
         return view('rooms.create');

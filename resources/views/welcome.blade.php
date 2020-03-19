@@ -8,13 +8,15 @@
 
         <a href="room/create" class="btn btn-primary mt-5"> Create Room  + </a>
 
-        <div class="card mt-5">
-            <div class="card-body">
-              <h5 class="card-title">Room Name</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go room</a>
+        @foreach ($rooms as $room)
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h5 class="card-title">{{$room->title}}</h5>
+                    <p class="card-text">{{$room->description}}</p>
+                    <a href="chats/{{$room->url}}" class="btn btn-primary">Go room</a>
+                </div>
             </div>
-          </div>
+        @endforeach
 
     </div>
 
