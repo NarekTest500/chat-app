@@ -20,7 +20,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/chats/{id}', 'ChatsController@index');
+// Route::get('/chats/{room}', 'ChatsController@index');
+Route::get('/chats', 'ChatsController@index');
 
 Route::get('/messages', 'ChatsController@fetchMessages');
 Route::post('/messages', 'ChatsController@sendMessages');

@@ -1952,7 +1952,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user'],
   data: function data() {
@@ -1961,7 +1960,8 @@ __webpack_require__.r(__webpack_exports__);
       newMessage: '',
       users: [],
       activeUser: false,
-      typingTimer: false
+      typingTimer: false,
+      numberOfUsers: 0
     };
   },
   created: function created() {
@@ -1969,23 +1969,20 @@ __webpack_require__.r(__webpack_exports__);
 
     this.fetchMessages();
     Echo.join('chat').here(function (user) {
-      // console.log('Here - ');
-      // console.log(user);
+      _this.numberOfUsers = user.length;
       _this.users = user;
     }).joining(function (user) {
-      // console.log('Joining - ');
-      // console.log(user);
+      _this.numberOfUsers++;
+
       _this.users.push(user);
     }).leaving(function (user) {
-      // console.log('Leaving - ');
-      // console.log(user);
+      _this.numberOfUsers--;
       _this.users = _this.users.filter(function (u) {
         return u.id != user.id;
       });
     }).listen('MessageSent', function (event) {
       _this.messages.push(event.message);
     }).listenForWhisper('typing', function (user) {
-      // console.log(user);
       _this.activeUser = user;
 
       if (_this.typingTimer) {
@@ -47390,7 +47387,9 @@ var render = function() {
   return _c("div", { staticClass: "row" }, [
     _c("div", { staticClass: "col-8" }, [
       _c("div", { staticClass: "card card-default" }, [
-        _c("div", { staticClass: "card-header" }, [_vm._v("Messages")]),
+        _c("div", { staticClass: "card-header" }, [
+          _vm._v("Messages " + _vm._s(_vm.numberOfUsers))
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body p-0" }, [
           _c(

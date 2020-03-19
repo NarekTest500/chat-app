@@ -6,6 +6,7 @@ use App\Events\MessageSent;
 use App\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Room;
 
 class ChatsController extends Controller
 {

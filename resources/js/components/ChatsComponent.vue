@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-8">
             <div class="card card-default">
-                <div class="card-header">Messages</div>
+                <div class="card-header">Messages {{numberOfUsers}}</div>
                 <div class="card-body p-0">
                     <ul class="list-unstyled" v-chat-scroll style="height: 300px; overflow-y:scroll">
                         <li class="p-2" v-for="(message, index) in messages" :key="index">
@@ -53,7 +53,8 @@
                 newMessage: '',
                 users: [],
                 activeUser: false,
-                typingTimer: false
+                typingTimer: false,
+                numberOfUsers: 0
             }
         },
 
@@ -62,12 +63,15 @@
 
             Echo.join('chat')
                 .here(user => {
+                    this.numberOfUsers = user.length;
                     this.users = user;
                 })
                 .joining(user => {
+                    this.numberOfUsers++;
                     this.users.push(user);
                 })
                 .leaving(user => {
+                    this.numberOfUsers--;
                     this.users = this.users.filter(u => u.id != user.id);
                 })
                 .listen('MessageSent', (event) => {
