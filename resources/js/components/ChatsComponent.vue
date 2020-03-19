@@ -32,8 +32,10 @@
                 <div class="card header">Active Users</div>
                 <div class="card-body">
                     <ul>
+
                         <li class="py-2" v-for="(user, index) in users" :key="index">
-                            {{user.name}}
+                           <span v-if="authUser === users[index].user.name">You</span>
+                           <span v-else>{{users[index].user.name}}</span>
                         </li>
                     </ul>
                 </div>
@@ -45,7 +47,7 @@
 <script>
     export default {
 
-        props: ['user'],
+        props: ['user', 'roomId'],
 
         data () {
             return {
@@ -54,7 +56,8 @@
                 users: [],
                 activeUser: false,
                 typingTimer: false,
-                numberOfUsers: 0
+                numberOfUsers: 0,
+                authUser: this.user.name,
             }
         },
 
@@ -69,12 +72,12 @@
                 .joining(user => {
                     this.numberOfUsers++;
                     this.users.push(user);
-                    this.$toaster.success(user.name + ' is joined the chat room');
+                    this.$toaster.success(user.user.name + ' is joined the chat room');
                 })
                 .leaving(user => {
                     this.numberOfUsers--;
-                    this.users = this.users.filter(u => u.id != user.id);
-                    this.$toaster.warning(user.name + ' is leaved the chat room');
+                    this.users = this.users.filter(u => u.user.id != user.user.id);
+                    this.$toaster.warning(user.user.name + ' is leaved the chat room');
                 })
                 .listen('MessageSent', (event) => {
                     this.messages.push(event.message);
@@ -95,7 +98,7 @@
 
         methods: {
             fetchMessages() {
-                axios.get('messages').then(response => {
+                axios.get('../messages').then(response => {
                     this.messages = response.data;
                 })
             },
@@ -107,7 +110,7 @@
                     message: this.newMessage
                 });
 
-                axios.post('messages', {message: this.newMessage});
+                axios.post('../messages', {message: this.newMessage});
                 this.newMessage = '';
             },
 

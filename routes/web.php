@@ -1,7 +1,7 @@
 <?php
 
-use App\Events\WebsocketDemoEvent;
-use Illuminate\Support\Facades\{Route, Auth};
+// use App\Events\WebsocketDemoEvent;
+use Illuminate\Support\Facades\{Route, Auth, Broadcast};
 
 /*
 |--------------------------------------------------------------------------
@@ -14,17 +14,25 @@ use Illuminate\Support\Facades\{Route, Auth};
 |
 */
 
-Route::get('/', 'IndexController@index');
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Broadcast::routes();
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Route::get('/chats/{room}', 'ChatsController@index');
-Route::get('/chats', 'ChatsController@index');
+// Route::get('/chat', 'ChatsController@index');
 
-Route::get('/messages', 'ChatsController@fetchMessages');
-Route::post('/messages', 'ChatsController@sendMessages');
+// Route::get('/messages', 'ChatsController@fetchMessages');
+// Route::post('/messages', 'ChatsController@sendMessages');
 
+Route::get('/room', 'RoomsController@index');
 Route::get('/room/create', 'RoomsController@create');
 Route::post('/room/create', 'RoomsController@store');
+Route::get('/room/{room}', 'RoomsController@singleRoom');
+
+Route::get('/messages', 'RoomsController@fetchMessages');
+Route::post('/messages', 'RoomsController@sendMessages');

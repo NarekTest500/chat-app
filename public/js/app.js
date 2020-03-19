@@ -1952,8 +1952,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user'],
+  props: ['user', 'roomId'],
   data: function data() {
     return {
       messages: [],
@@ -1961,7 +1963,8 @@ __webpack_require__.r(__webpack_exports__);
       users: [],
       activeUser: false,
       typingTimer: false,
-      numberOfUsers: 0
+      numberOfUsers: 0,
+      authUser: this.user.name
     };
   },
   created: function created() {
@@ -1976,14 +1979,14 @@ __webpack_require__.r(__webpack_exports__);
 
       _this.users.push(user);
 
-      _this.$toaster.success(user.name + ' is joined the chat room');
+      _this.$toaster.success(user.user.name + ' is joined the chat room');
     }).leaving(function (user) {
       _this.numberOfUsers--;
       _this.users = _this.users.filter(function (u) {
-        return u.id != user.id;
+        return u.user.id != user.user.id;
       });
 
-      _this.$toaster.warning(user.name + ' is leaved the chat room');
+      _this.$toaster.warning(user.user.name + ' is leaved the chat room');
     }).listen('MessageSent', function (event) {
       _this.messages.push(event.message);
     }).listenForWhisper('typing', function (user) {
@@ -2002,7 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchMessages: function fetchMessages() {
       var _this2 = this;
 
-      axios.get('messages').then(function (response) {
+      axios.get('../messages').then(function (response) {
         _this2.messages = response.data;
       });
     },
@@ -2011,7 +2014,7 @@ __webpack_require__.r(__webpack_exports__);
         user: this.user,
         message: this.newMessage
       });
-      axios.post('messages', {
+      axios.post('../messages', {
         message: this.newMessage
       });
       this.newMessage = '';
@@ -48126,11 +48129,9 @@ var render = function() {
             "ul",
             _vm._l(_vm.users, function(user, index) {
               return _c("li", { key: index, staticClass: "py-2" }, [
-                _vm._v(
-                  "\n                        " +
-                    _vm._s(user.name) +
-                    "\n                    "
-                )
+                _vm.authUser === _vm.users[index].user.name
+                  ? _c("span", [_vm._v("You")])
+                  : _c("span", [_vm._v(_vm._s(_vm.users[index].user.name))])
               ])
             }),
             0
