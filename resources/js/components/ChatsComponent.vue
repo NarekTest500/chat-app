@@ -47,7 +47,7 @@
 <script>
     export default {
 
-        props: ['user', 'roomId'],
+        props: ['user'],
 
         data () {
             return {

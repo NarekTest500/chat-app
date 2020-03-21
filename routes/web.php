@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\{Route, Auth, Broadcast};
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@index');
 
 Broadcast::routes();
 
@@ -36,3 +34,5 @@ Route::get('/room/{room}', 'RoomsController@singleRoom');
 
 Route::get('/messages', 'RoomsController@fetchMessages');
 Route::post('/messages', 'RoomsController@sendMessages');
+
+Route::post('/addroom', 'RoomsController@addRoom');

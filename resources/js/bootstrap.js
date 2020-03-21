@@ -34,7 +34,7 @@ import Echo from 'laravel-echo';
 window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
-    authEndpoint: 'http://localhost/chat-app/public/broadcasting/auth',
+    authEndpoint: 'http://localhost/chat-app-test/public/broadcasting/auth',
     broadcaster: 'pusher',
     key: 'anyKey',
     wsHost: window.location.hostname,

@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRoomRequest;
-use App\{Room, Message};
+use App\{Room, Message, RoomUsers};
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
+use App\Http\Requests\AddRoomStore;
 
 class RoomsController extends Controller
 {
@@ -24,9 +25,28 @@ class RoomsController extends Controller
 
     public function index ()
     {
-        $rooms = Room::orderBy('id', 'desc')->get();
+        $authRooms = Room::orderBy('id', 'desc')->where('user_id', Auth::user()->id)->get();
+        $reqRooms = RoomUsers::where('user_id', Auth::id())->get();
 
-        return view('rooms.index', compact('rooms'));
+        $roomsArr = [];
+        $joinRoom = [];
+
+        foreach ($reqRooms as $room) {
+            $roomsArr[] = $room->room_id;
+        }
+
+        foreach ($roomsArr as $id) {
+            $joinRoom[] = Room::where('id', $id)->get();
+        }
+
+        return view('rooms.index', [
+            'authRooms' => $authRooms,
+            'joinRoom' => $joinRoom
+        ]);
+
+        // $rooms = Room::orderBy('id', 'desc')->where('user_id', Auth::user()->id)->get();
+
+        // return view('rooms.index', compact('rooms'));
     }
 
     public function create ()
@@ -43,15 +63,34 @@ class RoomsController extends Controller
 
         $created = Room::create($validated);
 
-        if ($created) {
+        $room_users_validate = new RoomUsers;
+        $room_users_validate->user_id = $created->user_id;
+        $room_users_validate->room_id = $created->id;
+        $room_users_validate->save();
+
+        if ($created && $room_users_validate) {
             return redirect('/room');
         }
 
     }
 
-    public function singleRoom ($roomId)
+    public function singleRoom ($roomUrl)
     {
-        return view('rooms.singleRoom', compact('roomId'));
+        $room = Room::where('url', $roomUrl)->get();
+
+        $roomId = $room[0]->id;
+        $userId = Auth::id();
+
+        $room_users = RoomUsers::where([
+            ['user_id', '=', $userId],
+            ['room_id', '=', $roomId],
+        ])->get();
+
+        if ($room_users->isEmpty()) {
+            return redirect('/');
+        }
+
+        return view('rooms.singleRoom', compact('roomUrl'));
     }
 
     public function fetchMessages ()
@@ -68,6 +107,17 @@ class RoomsController extends Controller
         broadcast(new MessageSent($message->load('user')))->toOthers();
 
         return ['status' => 'Success'];
+    }
+
+    public function addRoom (AddRoomStore $request)
+    {
+        $validated = $request->validated();
+
+        $created = RoomUsers::create($validated);
+
+        if ($created) {
+            return back();
+        }
     }
 
 }
