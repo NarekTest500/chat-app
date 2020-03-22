@@ -1964,7 +1964,8 @@ __webpack_require__.r(__webpack_exports__);
       activeUser: false,
       typingTimer: false,
       numberOfUsers: 0,
-      authUser: this.user.name
+      authUser: this.user.name,
+      roomUrl: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
     };
   },
   created: function created() {
@@ -2016,6 +2017,8 @@ __webpack_require__.r(__webpack_exports__);
       });
       axios.post('../messages', {
         message: this.newMessage
+      }).then(function (res) {
+        console.log(res);
       });
       this.newMessage = '';
     },

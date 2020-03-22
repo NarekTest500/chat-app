@@ -12,8 +12,11 @@
 
             <div class="col-lg-6 border border-secondary mt-5">
                 <h1>Joined rooms</h1>
+                @if (count($joinRoom) === 0)
+                    <p> No roows </p>
+                @endif
                 @foreach ($joinRoom as $room)
-                    <div class="card">
+                    <div class="card mt-3">
                         <div class="card-body">
                             <h5 class="card-title">{{$room[0]->title}}</h5>
                             <p class="card-text">{{$room[0]->description}}</p>
@@ -28,13 +31,13 @@
 
                 <h1>Own rooms</h1>
                 @if (count($authRooms) > 0)
-                    @foreach ($joinRoom as $join)
-                        <div class="card mt-5">
+                    @foreach ($authRooms as $auth)
+                        <div class="card mt-3">
                             <div class="card-body">
-                                <h5 class="card-title">{{$join->title}}</h5>
-                                <p class="card-text">{{$join->description}}</p>
-                                <a href="room/{{$join->url}}" class="btn btn-primary">Go room</a>
-                                <code>{{$join->created_at}}</code>
+                                <h5 class="card-title">{{$auth->title}}</h5>
+                                <p class="card-text">{{$auth->description}}</p>
+                                <a href="room/{{$auth->url}}" class="btn btn-primary">Go room</a>
+                                <code>{{$auth->created_at}}</code>
                             </div>
                         </div>
                     @endforeach

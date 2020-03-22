@@ -58,6 +58,7 @@
                 typingTimer: false,
                 numberOfUsers: 0,
                 authUser: this.user.name,
+                roomUrl:  window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
             }
         },
 
@@ -97,6 +98,7 @@
         },
 
         methods: {
+
             fetchMessages() {
                 axios.get('../messages').then(response => {
                     this.messages = response.data;
@@ -107,10 +109,12 @@
 
                 this.messages.push({
                     user: this.user,
-                    message: this.newMessage
+                    message: this.newMessage,
                 });
 
-                axios.post('../messages', {message: this.newMessage});
+                axios.post('../messages', {message: this.newMessage}).then(res => {
+                    console.log(res);
+                })
                 this.newMessage = '';
             },
 

@@ -36,3 +36,4 @@ Route::get('/messages', 'RoomsController@fetchMessages');
 Route::post('/messages', 'RoomsController@sendMessages');
 
 Route::post('/addroom', 'RoomsController@addRoom');
+Route::post('/sendRoomId', 'RoomsController@sendRoomId');

@@ -78,6 +78,10 @@ class RoomsController extends Controller
     {
         $room = Room::where('url', $roomUrl)->get();
 
+        if ($room->isEmpty()) {
+            return redirect('/');
+        }
+
         $roomId = $room[0]->id;
         $userId = Auth::id();
 
@@ -95,13 +99,38 @@ class RoomsController extends Controller
 
     public function fetchMessages ()
     {
-        return Message::with('user')->get();
+        // $message = Message::where('user_id', 1)->get();
+        // return $message;
+
+        $url = url()->previous();
+        $lastElement = explode('/', $url);
+
+        $originalUrl = $lastElement[count($lastElement) - 1];
+
+        $room = Room::where('url', $originalUrl)->get();
+
+        return Message::with('user')->where('room_id', $room[0]->id)->get();
     }
 
     public function sendMessages (Request $request)
     {
+        // $mes = new Message;
+        // $mes->user_id = Auth::id();
+        // $mes->message = $request->message;
+        // $mes->roomId = $request->room_id;
+        // $mes->save();
+
+        $url = url()->previous();
+
+        $arr = explode('/', $url);
+
+        $roomUrl = $arr[count($arr) - 1];
+
+        $room = Room::where('url', $roomUrl)->get();
+
         $message = Auth::user()->messages()->create([
-            'message' => $request->message
+            'message' => $request->message,
+            'room_id' => $room[0]->id
         ]);
 
         broadcast(new MessageSent($message->load('user')))->toOthers();
@@ -116,7 +145,7 @@ class RoomsController extends Controller
         $created = RoomUsers::create($validated);
 
         if ($created) {
-            return back();
+            return redirect('room');
         }
     }
 

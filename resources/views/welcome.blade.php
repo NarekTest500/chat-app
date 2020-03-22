@@ -7,13 +7,13 @@
     <div class="container">
 
         <div class="row">
-            @foreach ($rooms as $room)
+            @foreach ($array as $room)
                 <div class="card col-lg-6 mt-5">
                     <div class="card-body">
                         <h5 class="card-title">{{$room->title}}</h5>
                         <p class="card-text">{{$room->description}}</p>
 
-                        @if (Auth::check() && $room->user_id !== Auth::id())
+                        @if (Auth::check())
                             <form action="addroom" method="post">
                                 @csrf
                                 <input type="hidden" name="room_id" value="{{$room->id}}">
@@ -21,7 +21,6 @@
 
                                 <button type="submit" class="btn btn-primary">Enter Request</button>
                             </form>
-                            {{-- <a href="room/{{$room->url}}" class="btn btn-primary">Enter Request</a> --}}
                         @endif
                     </div>
                 </div>
@@ -30,7 +29,5 @@
 
 
     </div>
-
-    {{-- <script src="js/app.js"></script> --}}
 
 @endsection
