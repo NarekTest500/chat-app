@@ -25,8 +25,8 @@ class RoomsController extends Controller
 
     public function index ()
     {
-        $authRooms = Room::orderBy('id', 'desc')->where('user_id', Auth::user()->id)->get();
-        $reqRooms = RoomUsers::where('user_id', Auth::id())->get();
+
+        $reqRooms = RoomUsers::orderBy('created_at', 'desc')->where('user_id', Auth::id())->get();
 
         $roomsArr = [];
         $joinRoom = [];
@@ -39,14 +39,8 @@ class RoomsController extends Controller
             $joinRoom[] = Room::where('id', $id)->get();
         }
 
-        return view('rooms.index', [
-            'authRooms' => $authRooms,
-            'joinRoom' => $joinRoom
-        ]);
+        return view('rooms.index', compact('joinRoom'));
 
-        // $rooms = Room::orderBy('id', 'desc')->where('user_id', Auth::user()->id)->get();
-
-        // return view('rooms.index', compact('rooms'));
     }
 
     public function create ()
@@ -99,8 +93,6 @@ class RoomsController extends Controller
 
     public function fetchMessages ()
     {
-        // $message = Message::where('user_id', 1)->get();
-        // return $message;
 
         $url = url()->previous();
         $lastElement = explode('/', $url);
@@ -114,12 +106,6 @@ class RoomsController extends Controller
 
     public function sendMessages (Request $request)
     {
-        // $mes = new Message;
-        // $mes->user_id = Auth::id();
-        // $mes->message = $request->message;
-        // $mes->roomId = $request->room_id;
-        // $mes->save();
-
         $url = url()->previous();
 
         $arr = explode('/', $url);
@@ -146,6 +132,30 @@ class RoomsController extends Controller
 
         if ($created) {
             return redirect('room');
+        }
+    }
+
+    public function leaveRoom ($id)
+    {
+        $room = RoomUsers::where([
+            'user_id' => Auth::id(),
+            'room_id' => $id
+        ])->delete();
+
+        $message = Message::where([
+            'user_id' => Auth::id(),
+            'room_id' => $id
+        ])->get();
+
+        if (!$message->isEmpty()) {
+            Message::where([
+                'user_id' => Auth::id(),
+                'room_id' => $id
+            ])->delete();
+        }
+
+        if ($room) {
+            return redirect('/room');
         }
     }
 

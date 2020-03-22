@@ -22,15 +22,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Route::get('/chat', 'ChatsController@index');
-
-// Route::get('/messages', 'ChatsController@fetchMessages');
-// Route::post('/messages', 'ChatsController@sendMessages');
-
 Route::get('/room', 'RoomsController@index');
 Route::get('/room/create', 'RoomsController@create');
 Route::post('/room/create', 'RoomsController@store');
 Route::get('/room/{room}', 'RoomsController@singleRoom');
+Route::post('/room/sendRoomId/{id}', 'RoomsController@leaveRoom');
 
 Route::get('/messages', 'RoomsController@fetchMessages');
 Route::post('/messages', 'RoomsController@sendMessages');
