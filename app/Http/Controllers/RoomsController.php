@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRoomRequest;
 use App\{Room, Message, RoomUsers};
-use Illuminate\Support\Str;
+use Illuminate\Support\{Str, Arr};
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
 use App\Http\Requests\AddRoomStore;
@@ -38,6 +38,8 @@ class RoomsController extends Controller
         foreach ($roomsArr as $id) {
             $joinRoom[] = Room::where('id', $id)->get();
         }
+
+        $joinRoom = Arr::flatten($joinRoom);
 
         return view('rooms.index', compact('joinRoom'));
 

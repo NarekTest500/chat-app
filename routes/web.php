@@ -20,13 +20,13 @@ Broadcast::routes();
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/room', 'RoomsController@index');
-Route::get('/room/create', 'RoomsController@create');
-Route::post('/room/create', 'RoomsController@store');
-Route::get('/room/{room}', 'RoomsController@singleRoom');
-Route::post('/room/sendRoomId/{id}', 'RoomsController@leaveRoom');
+Route::prefix('room')->group(function () {
+    Route::get('/', 'RoomsController@index');
+    Route::get('/create', 'RoomsController@create');
+    Route::post('/create', 'RoomsController@store');
+    Route::get('/{room}', 'RoomsController@singleRoom');
+    Route::post('/sendRoomId/{id}', 'RoomsController@leaveRoom');
+});
 
 Route::get('/messages', 'RoomsController@fetchMessages');
 Route::post('/messages', 'RoomsController@sendMessages');
